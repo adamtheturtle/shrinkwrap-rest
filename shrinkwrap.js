@@ -1,33 +1,16 @@
 var async = require('async')
-
-/*
-
-  inputs:
-
-    * github ssh key
-    * package.json contents
-
-  outputs:
-
-    * shrinkwrap.json contents
-  
-*/
-var async = require('async')
 var fs = require('fs')
 var cp = require('child_process')
 var mkdirp = require('mkdirp')
 
 module.exports = function(github_key, package_json_content, done){
 
+    /*
+      Unique timestamped directory name so that this can be run without
+      conflicts multiple times.
+    */
     var timestamp = new Date().getTime()
     var folderPath = '/tmp/shrinkwrap-build-' + timestamp
-    var ssh_config = [
-      'Host github',
-      '    User git',
-      '    HostName github.com',
-      '    IdentityFile ' + folderPath + '/github_key',
-      '    StrictHostKeyChecking no'
-    ].join("\n")
 
     var shrinkwrap_contents = null
     async.series([
@@ -43,9 +26,6 @@ module.exports = function(github_key, package_json_content, done){
       function(next) {
         fs.writeFile('/root/.ssh/id_rsa', github_key, next)
       },
-/*      function(next) {
-        fs.writeFile('/root/.ssh/config', ssh_config, next)
-      },*/
       function(next) {
           cp.exec('chmod 0600 /root/.ssh/id_rsa', {
           cwd: folderPath
@@ -59,39 +39,20 @@ module.exports = function(github_key, package_json_content, done){
           cp.exec('ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts', {
           cwd: folderPath
         }, function(err, data, stderr) {
-            /*Stupid thing gives an error when it works*/
             next()
         })
       },
-/*      function(next) {
-          cp.exec('eval `ssh-agent -s` && ssh-add github_key && npm install && npm shrinkwrap', {
-          cwd: folderPath
-        }, function(err, data, stderr) {
-            console.log('eval error')
-            console.dir(err)
-            console.log(data)
-            console.log(stderr)
-            next(err)
-        })
-      },*/
       function(next) {
-/*        return done()*/
-        console.log("WILL NPM INSTALL")
         cp.exec('npm install', {
           cwd: folderPath
         }, function(err, data, stderr) {
-          /*if (err) return next(err)
-          if (stderr) return next(stderr)*/
           next()
         })
       },
       function(next) {
-        console.log("WILL NPM SHRINKWRAP")
         cp.exec('npm shrinkwrap', {
           cwd: folderPath
         }, function(err, data, stderr) {
-/*          if (err) return next(err)
-          if (stderr) return next(stderr)*/
           next()
         })
       },
@@ -103,7 +64,7 @@ module.exports = function(github_key, package_json_content, done){
         })
       },
     ], function(err){
-      if (err) console.log("FINAL ERROR " + err)
+      if (err) console.log(err)
       if (err) return done(err)
       done(null, shrinkwrap_contents)
     })
