@@ -12,11 +12,14 @@ var async = require('async')
     * shrinkwrap.json contents
   
 */
+var async = require('async')
+var fs = require('fs')
+var cp = require('child_process')
 
 module.exports = function(github_key, package_json_content, done){
 
     var timestamp = new Date().getTime()
-    var folderPath = '/tmp/shrinkwrap-build-' + depName + version + timestamp
+    var folderPath = '/tmp/shrinkwrap-build-' + timestamp
     var ssh_config = [
       'Host github',
       '    User git',
@@ -26,15 +29,18 @@ module.exports = function(github_key, package_json_content, done){
     ].join("\n")
 
     var shrinkwrap_contents = null
-    series([
+    async.series([
       function(next) {
         fs.mkdir(folderPath, next)
+      },
+      function(next) {
+        fs.mkdir('/root/.ssh', next)
       },
       function(next) {
         fs.writeFile(folderPath + '/package.json', package_json_content, next)
       },
       function(next) {
-        fs.writeFile(folderPath + '/github_key', decoded_ssh_key, next)
+        fs.writeFile(folderPath + '/github_key', github_key, next)
       },
       function(next) {
         fs.writeFile('/root/.ssh/config', ssh_config, next)
@@ -79,12 +85,7 @@ module.exports = function(github_key, package_json_content, done){
       },
     ], function(err){
       if (err) console.log("FINAL ERROR " + err)
-      if (err) return cb(err)
-      finished(true)
-    })    
-  } else {
-    finished(false)
-  }
-  done()
-
+      if (err) return done(err)
+      done()
+    })
 }

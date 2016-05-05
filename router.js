@@ -25,6 +25,8 @@ module.exports = function(opts){
           return doError(res, 'package_file property required')
         }
 
+        console.log(data.github_ssh_key)
+        console.log(data.package_file)
         var githubKey = new Buffer(data.github_ssh_key, 'base64').toString()
         var packageJSON = new Buffer(data.package_file, 'base64').toString()
         shrinkwrap(githubKey, packageJSON, function(err, data){
