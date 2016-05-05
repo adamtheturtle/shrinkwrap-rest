@@ -9,6 +9,9 @@ module.exports = function(github_key, package_json_content, done) {
       Unique timestamped directory name so that this can be run without
       conflicts multiple times.
     */
+  console.log("Running a shinkwrap")
+  console.dir(package_json_content)
+
   var timestamp = new Date().getTime()
   var folderPath = '/tmp/shrinkwrap-build-' + timestamp
 
