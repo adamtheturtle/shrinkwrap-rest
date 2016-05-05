@@ -9,7 +9,7 @@ This is a service which runs in a Docker container.
 ```
 $ docker build -t shrinkwrap .
 $ docker rm -f shrinkwrap_container
-$ docker run -p 8085:8080 -d --name apples shrinkwrap
+$ docker run -p 8085:8080 -d --name shrinkwrap_container shrinkwrap
 ```
 
 ## API
