@@ -15,3 +15,6 @@ curl -H "Content-type: application/json" \
   -d "{\"package_file\": \"$PACKAGE_JSON\", \"github_ssh_key\": \"$KEY\"}" \
   http://127.0.0.1:8085/v1/shrinkwrap
 ```
+
+TODO: Mention - no error handling
+Uber shrinkwrap

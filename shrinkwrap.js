@@ -90,14 +90,21 @@ module.exports = function(github_key, package_json_content, done){
         cp.exec('npm shrinkwrap', {
           cwd: folderPath
         }, function(err, data, stderr) {
-          if (err) return next(err)
-          if (stderr) return next(stderr)
+/*          if (err) return next(err)
+          if (stderr) return next(stderr)*/
+          next()
+        })
+      },
+      function(next) {
+        fs.readFile(folderPath + '/npm-shrinkwrap.json', 'utf8', function(err, data) {
+          if (err) next(err)
+          shrinkwrap_contents = data
           next()
         })
       },
     ], function(err){
       if (err) console.log("FINAL ERROR " + err)
       if (err) return done(err)
-      done()
+      done(null, shrinkwrap_contents)
     })
 }
