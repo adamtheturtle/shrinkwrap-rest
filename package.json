@@ -1,0 +1,16 @@
+{
+  "name": "auth0-shrinkwrap-service",
+  "private": true,
+  "version": "1.0.0",
+  "description": "HTTP API to generate an npm shrinkwrap for a module",
+  "main": "index.js",
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "async": "^1.5.2",
+    "concat-stream": "^1.5.1",
+    "http-hash-router": "^1.1.0",
+    "minimist": "^1.2.0",
+    "morgan": "^1.7.0"
+  }
+}
