@@ -32,6 +32,7 @@ module.exports = function(opts){
         shrinkwrap(githubKey, packageJSON, function(err, data){
           if(err) return doError(res, err)
           res.setHeader('Content-type', 'application/json')
+          res.statusCode = 200
           res.end(data)
         })
       }))
