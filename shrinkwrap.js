@@ -1,7 +1,7 @@
-var async = require('async')
-var fs = require('fs')
-var cp = require('child_process')
-var mkdirp = require('mkdirp')
+const async = require('async')
+const fs = require('fs')
+const cp = require('child_process')
+const mkdirp = require('mkdirp')
 
 module.exports = function(github_key, package_json_content, done) {
 
