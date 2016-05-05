@@ -15,6 +15,7 @@ var async = require('async')
 var async = require('async')
 var fs = require('fs')
 var cp = require('child_process')
+var mkdirp = require('mkdirp')
 
 module.exports = function(github_key, package_json_content, done){
 
@@ -31,22 +32,22 @@ module.exports = function(github_key, package_json_content, done){
     var shrinkwrap_contents = null
     async.series([
       function(next) {
-        fs.mkdir(folderPath, next)
+        mkdirp(folderPath, next)
       },
       function(next) {
-        fs.mkdir('/root/.ssh', next)
+        mkdirp('/root/.ssh', next)
       },
       function(next) {
         fs.writeFile(folderPath + '/package.json', package_json_content, next)
       },
       function(next) {
-        fs.writeFile(folderPath + '/github_key', github_key, next)
+        fs.writeFile('/root/.ssh/id_rsa', github_key, next)
       },
-      function(next) {
+/*      function(next) {
         fs.writeFile('/root/.ssh/config', ssh_config, next)
-      },
+      },*/
       function(next) {
-          cp.exec('chmod 0600 github_key', {
+          cp.exec('chmod 0600 /root/.ssh/id_rsa', {
           cwd: folderPath
         }, function(err, data, stderr) {
             if (err) return next(err)
@@ -54,8 +55,16 @@ module.exports = function(github_key, package_json_content, done){
             next()
         })
       },
+      function(next) {
+          cp.exec('ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts', {
+          cwd: folderPath
+        }, function(err, data, stderr) {
+            /*Stupid thing gives an error when it works*/
+            next()
+        })
+      },
 /*      function(next) {
-          cp.exec('eval `ssh-agent -s`', {
+          cp.exec('eval `ssh-agent -s` && ssh-add github_key && npm install && npm shrinkwrap', {
           cwd: folderPath
         }, function(err, data, stderr) {
             console.log('eval error')
@@ -66,15 +75,18 @@ module.exports = function(github_key, package_json_content, done){
         })
       },*/
       function(next) {
-        cp.exec('npm install --cache .', {
+/*        return done()*/
+        console.log("WILL NPM INSTALL")
+        cp.exec('npm install', {
           cwd: folderPath
         }, function(err, data, stderr) {
-          if (err) return next(err)
-          if (stderr) return next(stderr)
+          /*if (err) return next(err)
+          if (stderr) return next(stderr)*/
           next()
         })
       },
       function(next) {
+        console.log("WILL NPM SHRINKWRAP")
         cp.exec('npm shrinkwrap', {
           cwd: folderPath
         }, function(err, data, stderr) {
