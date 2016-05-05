@@ -49,8 +49,7 @@ module.exports = function(github_key, package_json_content, done) {
       cp.exec('npm install', {
         cwd: folderPath
       }, function(err, data, stderr) {
-        if (err) return next(err)
-        if (stderr) return next(stderr)
+
         next()
       })
     },
