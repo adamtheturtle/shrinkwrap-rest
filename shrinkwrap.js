@@ -70,7 +70,7 @@ module.exports = function(github_key, package_json_content, done) {
     if (err) console.log(err)
     if (err) return done(err)
     console.log("Shrinkwrap content:")
-    console.dir(shinkwrap_contents)
+    console.dir(shrinkwrap_contents)
     done(null, shrinkwrap_contents)
   })
 }
