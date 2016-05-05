@@ -50,4 +50,3 @@ This has limited error handling
 This has no CI, which should run tests and e.g. linting
 This uses exec processes, but could probably use Uber's shrinkwrap library to avoid flakiness
 This should be hooked up to a domain
-There are unused dependencies
