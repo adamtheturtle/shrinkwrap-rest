@@ -1,0 +1,23 @@
+{
+  "name": "repo_4_depends_on_repo_1_and_repo_2",
+  "version": "2.0.0",
+  "description": "Repo 4",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Auth0Alike/repo_4_depends_on_repo_1_and_repo_2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Auth0Alike/repo_4_depends_on_repo_1_and_repo_2/issues"
+  },
+  "homepage": "https://github.com/Auth0Alike/repo_4_depends_on_repo_1_and_repo_2#readme",
+  "dependencies": {
+    "async": "^0.5.0",
+    "repo_1": "github:Auth0Alike/repo_1#v4.0.5"
+  }
+}
