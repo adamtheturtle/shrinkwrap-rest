@@ -39,7 +39,9 @@ $ set -x PACKAGE_JSON (cat example_package.json | base64)
 $ set -x KEY (cat ~/.ssh/auth0 | base64)
 $ set -x URL http://127.0.0.1:8085
 
-$ curl -H "Content-type: application/json" \
+$ curl \
+  -X POST \
+  -H "Content-type: application/json" \
   -d "{\"package_file\": \"$PACKAGE_JSON\", \"github_ssh_key\": \"$KEY\"}" \
   $URL/v1/shrinkwrap
 ```
